@@ -12,11 +12,16 @@ public class PersonScript : MonoBehaviour
     public TextMeshProUGUI log_text;
     public TextMeshProUGUI personality_text;
     public TextMeshProUGUI idealType_text;
+    public TextMeshProUGUI ratio_text;
 
 	// thingys
 	public string namae;
 	public List<HobbyStruct> hobbies;
 	public List<string> personalities;
+	public float intimacy;
+	public float passion;
+	public float commitment;
+	public float relpFactor; // for close friends to dating
 	public List<string> idealType;
 
 	// thingy amounts
@@ -53,12 +58,15 @@ public class PersonScript : MonoBehaviour
 			RollHobbies();
 			RollPersonalities();
 			RollIdealType();
+			RollTriangleOfLove();
 		}
 		Show_Personality_Text();
 		Show_IT_Text();
+		Show_ratio_text();
 		namae = GameManager.me.names[Random.Range(0, GameManager.me.names.Count)] + " " + GameManager.me.lastNames[Random.Range(0,GameManager.me.lastNames.Count)];
 		defaultColor = GetComponent<SpriteRenderer>().color;
 		timer = Random.Range(0, interval);
+
 	}
 
 	private void Update()
@@ -246,20 +254,22 @@ public class PersonScript : MonoBehaviour
 				}
 				if (idealPsnlts.Count > 0) // if date's personalities match this person's ideal type
 				{
-					print("ideal personality pass");
-					// roll one ideal personality
-					string idealP = idealPsnlts[Random.Range(0, idealPsnlts.Count)];
-					// show text
-					logText = "Log: \n";
-					logText += namae + " finds " + psDate.namae + "'s being " + idealP + " very attractive.";
-					log_text.text = logText;
-					// find the line connecting them and add relationship
+					// print("ideal personality pass");
+					// // roll one ideal personality
+					// string idealP = idealPsnlts[Random.Range(0, idealPsnlts.Count)];
+					// // show text
+					// logText = "Log: \n";
+					// logText += namae + " finds " + psDate.namae + "'s being " + idealP + " very attractive.";
+					// log_text.text = logText;
+					// // find the line connecting them and add relationship
 					FindLineWith(date);
+					Show_HobbyLog();
 				}
 				else // if no match
 				{
 					// show hobby log
 					Show_HobbyLog();
+					FindLineWith(date);
 				}
 			}
 			else // if no such person
@@ -315,9 +325,26 @@ public class PersonScript : MonoBehaviour
 			if ((psA.namae == namae && psB.namae == person.GetComponent<PersonScript>().namae) ||
 				(psB.namae == namae && psA.namae == person.GetComponent<PersonScript>().namae))
 			{
-				ls.relpBetweenThem++;
+				if (ls.state == 0) // friends
+				{
+					ls.relpBetweenThem++;
+				}
+				else if (ls.state == 1) // close friends
+				{
+					ls.relpBetweenThem += CalculateRatio(psA, psB);
+				}
 			}
 		}
+	}
+
+	private float CalculateRatio(PersonScript a, PersonScript b)
+	{
+		float relpIncreaseNum = 0;
+		float intimacyDiff = Mathf.Abs(a.intimacy - b.intimacy) ;
+		float passionDiff = Mathf.Abs(a.passion - b.passion) ;
+		relpIncreaseNum = 1 / (intimacyDiff + passionDiff * relpFactor);
+		print(relpIncreaseNum);
+		return relpIncreaseNum;
 	}
 
 	private void Show_Personality_Text()
@@ -350,5 +377,22 @@ public class PersonScript : MonoBehaviour
 				idealType_text.text += idealType[i];
 			}
 		}
+	}
+
+	private void Show_ratio_text()
+	{
+		ratio_text.text = "intimacy : passion : commitment: \n";
+		ratio_text.text += intimacy.ToString("F1") + " : " + passion.ToString("F1") + " : " + commitment.ToString("F1");
+	}
+
+	private void RollTriangleOfLove()
+	{
+		float i = Random.Range(0, 1f);
+		float p = Random.Range(0, 1f);
+		float c = Random.Range(0, 1f);
+		float factor = 1 / (i + p + c);
+		intimacy = i * factor;
+		passion = p * factor;
+		commitment = c * factor;
 	}
 }
