@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
 		psMary.log_text = ths.log;
 		psMary.personality_text = ths.personality;
 		psMary.idealType_text = ths.idealType;
+		psMary.ratio_text = ths.ratio;
 
 		// spawn celine
 		celine = Instantiate(celinePrefab);
@@ -76,6 +77,7 @@ public class GameManager : MonoBehaviour
 		psCeline.log_text = ths_celine.log;
 		psCeline.personality_text = ths_celine.personality;
 		psCeline.idealType_text = ths_celine.idealType;
+		psCeline.ratio_text = ths_celine.ratio;
 	}
 
 	private void Update()
@@ -128,6 +130,7 @@ public class GameManager : MonoBehaviour
 				ps.log_text = ths.log;
 				ps.personality_text = ths.personality;
 				ps.idealType_text = ths.idealType;
+				ps.ratio_text = ths.ratio;
 				if (i == population - 1)
 				{
 					state = game;
@@ -212,7 +215,7 @@ public class GameManager : MonoBehaviour
 
 	private void SpawnPeople()
 	{
-		spawnInterval *= 0.9f;
+		spawnInterval *= 0.99f;
 		GameObject person = Instantiate(personPrefab);
 		person.transform.position = new Vector3(Random.Range(min.x, max.x), Random.Range(min.y, max.y), 0);
 		GameObject textHolder = Instantiate(textHolderPrefab);
@@ -224,5 +227,6 @@ public class GameManager : MonoBehaviour
 		ps.log_text = ths.log;
 		ps.personality_text = ths.personality;
 		ps.idealType_text = ths.idealType;
+		ps.ratio_text = ths.ratio;
 	}
 }

@@ -10,4 +10,5 @@ public class TextHolderScript : MonoBehaviour
     public TextMeshProUGUI log;
     public TextMeshProUGUI personality;
     public TextMeshProUGUI idealType;
+    public TextMeshProUGUI ratio;
 }

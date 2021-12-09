@@ -7,7 +7,7 @@ public class LineScript : MonoBehaviour
     public GameObject a;
     public GameObject b;
     private LineRenderer lr;
-    public int relpBetweenThem;
+    public float relpBetweenThem;
     public int newHobbyCost;
     private PersonScript psA;
     private PersonScript psB;
@@ -30,15 +30,15 @@ public class LineScript : MonoBehaviour
 
 	void Update()
     {
-        lr.SetPosition(0, a.transform.position);
-        lr.SetPosition(1, b.transform.position);
-
-        if (!lr.enabled)
-		{
+        if (!lr.enabled || a == null || b == null)
+        {
             GameManager.me.lines.Remove(gameObject);
             Destroy(gameObject);
-		}
-
+        }
+        
+        lr.SetPosition(0, a.transform.position);
+        lr.SetPosition(1, b.transform.position);
+        
         if (relpBetweenThem >= newHobbyCost)
 		{
             if (state == friend)
